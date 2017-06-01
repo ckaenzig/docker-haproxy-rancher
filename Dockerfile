@@ -12,6 +12,5 @@ RUN curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/rel
 COPY ./conf.d /etc/confd/conf.d
 COPY ./templates /etc/confd/templates
 
-COPY ./docker-entrypoint.sh /
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/confd"]
+CMD ["-interval", "3", "-backend", "rancher", "-prefix", "/2016-07-29"]
