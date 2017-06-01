@@ -23,7 +23,6 @@ listen stats
 
 frontend 443
     bind *:443 ssl crt /usr/local/etc/haproxy/certs/
-    mode http
     use_backend varnish if { srv_is_up(varnish/cache) }
     # default_backend sorry_page
 
@@ -32,7 +31,6 @@ backend varnish
 
 frontend 8080
     bind *:8080
-    mode http
 {{- range $stack := ls "/stacks" }}
   {{- range $service := ls (printf "/stacks/%s/services" $stack) }}
     {{- if (exists (printf "/stacks/%s/services/%s/labels/lb.enable" $stack $service)) }}
