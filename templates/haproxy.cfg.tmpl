@@ -54,6 +54,7 @@ frontend 8080
       {{- if (eq "true" (getv (printf "/stacks/%s/services/%s/labels/lb.enable" $stack $service))) }}
 
 backend 8080_{{ $stack }}_{{ $service }}
+    balance roundrobin
         {{- range $container := ls (printf "/stacks/%s/services/%s/containers" $stack $service) }}
           {{- if (not (eq "stacks" $container)) }}
             {{- $ip := getv (printf "/stacks/%s/services/%s/containers/%s/primary_ip" $stack $service $container) }}
