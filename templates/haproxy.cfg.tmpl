@@ -21,6 +21,9 @@ listen stats
     stats enable
     stats uri /stats
 
+backend varnish
+    server cache 127.0.0.1:6083 send-proxy inter 2000 rise 2 fall 3 check
+
 frontend 8080
     bind *:8080
     mode http
