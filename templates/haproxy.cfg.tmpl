@@ -6,9 +6,12 @@ defaults
     log global
     mode http
     option httplog
-    timeout connect  5000
-    timeout client  10000
-    timeout server  10000
+    timeout connect 5s
+    timeout client  20s
+    timeout server  30s
+    timeout http-request 10s
+    timeout http-keep-alive 5s
+    timeout check   2s
 
 resolvers rancher
     nameserver dnsmasq 169.254.169.250:53
