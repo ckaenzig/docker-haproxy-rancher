@@ -80,10 +80,16 @@ frontend backdoor_bypass_varnish
 {{- end }}
     default_backend sorry_page
 
-
 {{- range $stack := ls "/stacks" }}
   {{- range $service := ls (printf "/stacks/%s/services" $stack) }}
     {{- if (exists (printf "/stacks/%s/services/%s/labels/lb.enable" $stack $service)) }}
+      {{- if (exists (printf "/stacks/%s/services/%s/labels/lb.backdoor.port" $stack $service)) }}
+        {{- $backdoor_port := getv (printf "/stacks/%s/services/%s/labels/lb.backdoor.port" $stack $service) }}
+
+frontend backdoor_{{ $stack }}_{{ $service }}
+    bind    :{{ $backdoor_port}} ssl crt /usr/local/etc/haproxy/certs/
+    use_backend 8080_{{ $stack }}_{{ $service }}
+      {{- end }}
 
 backend 8080_{{ $stack }}_{{ $service }}
     balance roundrobin
