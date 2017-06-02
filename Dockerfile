@@ -1,6 +1,8 @@
 FROM haproxy:1.7
 
-ENV CONFD_VERSION=0.12.0-alpha3
+ENV \
+  CONFD_VERSION=0.12.0-alpha3 \
+  REFRESH_INTERVAL=10
 
 RUN apt-get update \
   && apt-get install -y curl \
@@ -12,5 +14,4 @@ RUN curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/rel
 COPY ./conf.d /etc/confd/conf.d
 COPY ./templates /etc/confd/templates
 
-ENTRYPOINT ["/usr/local/bin/confd"]
-CMD ["-interval", "3", "-backend", "rancher", "-prefix", "/2016-07-29"]
+CMD /usr/local/bin/confd -interval $REFRESH_INTERVAL -backend rancher -prefix /2016-07-29
