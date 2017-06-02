@@ -56,8 +56,8 @@ frontend 8080
           {{- else }}
     acl 8080_{{ $stack }}_{{ $service }}_host hdr_beg(host) -i {{ $service }}.{{ $stack }}.{{ $domain }}
           {{- end }}
-          {{- if (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_host" $stack $service)) (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_url" $stack $service)) (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_value" $stack $service)))) }}
-            {{- $value := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore_value" $stack $service) }}
+          {{- if (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.host" $stack $service)) (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.url" $stack $service)) (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service)))) }}
+            {{- $value := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service) }}
     use_backend 8080_{{ $stack }}_{{ $service }} if { srv_is_up(8080_{{ $stack }}_{{ $service }}_{{ $value }}_line/semaphore) } 8080_{{ $stack }}_{{ $service }}_host
           {{- else }}
     use_backend 8080_{{ $stack }}_{{ $service }} if 8080_{{ $stack }}_{{ $service }}_host
@@ -81,8 +81,8 @@ frontend backdoor_bypass_varnish
           {{- else }}
     acl 8080_{{ $stack }}_{{ $service }}_host hdr_beg(host) -i {{ $service }}.{{ $stack }}.{{ $domain }}
           {{- end }}
-          {{- if (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_host" $stack $service)) (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_url" $stack $service)) (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_value" $stack $service)))) }}
-            {{- $value := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore_value" $stack $service) }}
+          {{- if (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.host" $stack $service)) (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.url" $stack $service)) (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service)))) }}
+            {{- $value := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service) }}
     use_backend 8080_{{ $stack }}_{{ $service }} if { srv_is_up(8080_{{ $stack }}_{{ $service }}_{{ $value }}_line/semaphore) } 8080_{{ $stack }}_{{ $service }}_host
           {{- else }}
     use_backend 8080_{{ $stack }}_{{ $service }} if 8080_{{ $stack }}_{{ $service }}_host
@@ -108,10 +108,10 @@ backend 8080_{{ $stack }}_{{ $service }}
     server {{ $container }} {{ $ip }}:80 resolvers rancher check
           {{- end }}
         {{- end }}
-        {{- if (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_host" $stack $service)) (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_url" $stack $service)) (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore_value" $stack $service)))) }}
-          {{- $host := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore_host" $stack $service) }}
-          {{- $url := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore_url" $stack $service) }}
-          {{- $value := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore_value" $stack $service) }}
+        {{- if (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.host" $stack $service)) (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.url" $stack $service)) (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service)))) }}
+          {{- $host := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore.host" $stack $service) }}
+          {{- $url := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore.url" $stack $service) }}
+          {{- $value := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service) }}
 
 backend 8080_{{ $stack }}_{{ $service }}_{{ $value }}_line
 option httpchk GET "{{ $url }}" "HTTP/1.0\r\nHost:\ {{ $host }}"
