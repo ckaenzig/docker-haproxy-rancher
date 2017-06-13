@@ -90,6 +90,7 @@ frontend backdoor_{{ $stack }}_{{ $service }}
 
 backend 8080_{{ $stack }}_{{ $service }}
     balance roundrobin
+    option redispatch
     default-server inter 2000 rise 2 fall 3 init-addr none
       {{- range $container := ls (printf "/stacks/%s/services/%s/containers" $stack $service) }}
         {{- if (not (eq "stacks" $container)) }}
