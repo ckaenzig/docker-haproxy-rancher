@@ -1,13 +1,3 @@
-{{- define "path" }}
-  {{- range $i, $e := . }}
-    {{- if (gt $i 0) }}/{{ $e }}{{ end }}
-  {{- end }}
-{{- end }}
-{{- define "path_underscore" }}
-  {{- range $i, $e := . }}
-    {{- if (gt $i 0) }}_{{ $e }}{{ end }}
-  {{- end }}
-{{- end }}
 global
     log /dev/log local2 debug
 
@@ -64,20 +54,14 @@ frontend 8080
     bind *:8080
 {{- range $stack := ls "/stacks" }}
   {{- range $service := ls (printf "/stacks/%s/services" $stack) }}
-    {{- if (exists (printf "/stacks/%s/services/%s/labels/lb.enable" $stack $service)) }}
-      {{- $lb := getv (printf "/stacks/%s/services/%s/labels/lb.enable" $stack $service) }}
-      {{- range split $lb "," }}
-        {{- $url := split . "/" }}
-    acl 8080_{{ replace (index $url 0) "." "_" -1 }}_host hdr_beg(host) -i {{ index $url 0 }}
-        {{- if (gt (len $url) 1) }}
-    acl 8080_{{ replace (index $url 0) "." "_" -1 }}{{ template "path_underscore" $url }}_path path_beg -i {{ template "path" $url }}
-        {{- end }}
-        {{- if (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.host" $stack $service)) (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.url" $stack $service)) (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service)))) }}
-          {{- $value := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service) }}
-    use_backend 8080_{{ $stack }}_{{ $service }} if { srv_is_up(8080_{{ $stack }}_{{ $service }}_{{ $value }}_mode/semaphore) } 8080_{{ replace (index $url 0) "." "_" -1 }}_host{{ if (gt (len $url) 1) }} 8080_{{ replace (index $url 0) "." "_" -1 }}{{ template "path_underscore" $url }}_path{{ end }}
-        {{- else }}
-    use_backend 8080_{{ $stack }}_{{ $service }} if 8080_{{ replace (index $url 0) "." "_" -1 }}_host{{ if (gt (len $url) 1) }} 8080_{{ replace (index $url 0) "." "_" -1 }}{{ template "path_underscore" $url }}_path{{ end }}
-        {{- end }}
+    {{- if (exists (printf "/stacks/%s/services/%s/labels/lb.routing_key" $stack $service)) }}
+      {{- $routing_key := getv (printf "/stacks/%s/services/%s/labels/lb.routing_key" $stack $service) }}
+    acl 8080_routing_to_{{ $routing_key }} hdr(x-routing-key) -i {{ $routing_key }}
+      {{- if (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.host" $stack $service)) (and (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.url" $stack $service)) (exists (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service)))) }}
+        {{- $value := getv (printf "/stacks/%s/services/%s/labels/lb.semaphore.value" $stack $service) }}
+    use_backend 8080_{{ $stack }}_{{ $service }} if { srv_is_up(8080_{{ $stack }}_{{ $service }}_{{ $value }}_mode/semaphore) } 8080_routing_to_{{ $routing_key }}
+      {{- else }}
+    use_backend 8080_{{ $stack }}_{{ $service }} if 8080_routing_to_{{ $routing_key }}
       {{- end }}
     {{- end }}
   {{- end }}
