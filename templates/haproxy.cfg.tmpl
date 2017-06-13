@@ -51,8 +51,14 @@ frontend 443
     use_backend varnish if { srv_is_up(varnish/cache) }
     default_backend sorry_page
 
+frontend sorry_internal
+    bind        127.0.0.1:8082
+    use_backend sorry_page
+
+
 backend varnish
     server cache 127.0.0.1:6083 send-proxy inter 2000 rise 2 fall 3 check
+    server sorry 127.0.0.1:8082 backup
 
 frontend 8080
     bind *:8080
@@ -92,6 +98,7 @@ backend 8080_{{ $stack }}_{{ $service }}
     balance roundrobin
     option redispatch
     default-server inter 2000 rise 2 fall 3 init-addr none
+    server sorry 127.0.0.1:8082 backup
       {{- range $container := ls (printf "/stacks/%s/services/%s/containers" $stack $service) }}
         {{- if (not (eq "stacks" $container)) }}
     server {{ $container }} {{ $container }}.rancher.internal:80 resolvers rancher check
