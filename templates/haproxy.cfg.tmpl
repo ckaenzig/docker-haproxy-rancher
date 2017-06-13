@@ -52,6 +52,7 @@ backend varnish
 
 frontend 8080
     bind *:8080
+    default_backend sorry_page
 {{- range $stack := ls "/stacks" }}
   {{- range $service := ls (printf "/stacks/%s/services" $stack) }}
     {{- if (exists (printf "/stacks/%s/services/%s/labels/lb.routing_key" $stack $service)) }}
