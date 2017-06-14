@@ -75,7 +75,19 @@ frontend 8080
 backend 8080_{{ $stack }}_{{ $service }}
     balance roundrobin
     option redispatch
+    {{- if (exists (printf "/stacks/%s/services/%s/health_check" $stack $service)) }}
+      {{- $healthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/healthy_threshold" $stack $service) }}
+      {{- $interval := getv (printf "/stacks/%s/services/%s/health_check/interval" $stack $service) }}
+      {{- $response_timeout := getv (printf "/stacks/%s/services/%s/health_check/response_timeout" $stack $service) }}
+      {{- $unhealthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/unhealthy_threshold" $stack $service) }}
+      {{- $request_line := getv (printf "/stacks/%s/services/%s/health_check/request_line" $stack $service) }}
+      {{- $port := getv (printf "/stacks/%s/services/%s/health_check/port" $stack $service) }}
+    default-server inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none
+    timeout check {{ $response_timeout }}
+    option httpchk {{ $request_line }}
+    {{- else }}
     default-server inter 2000 rise 2 fall 3 init-addr none
+    {{- end }}
     server sorry 127.0.0.1:8082 backup
       {{- range $container := ls (printf "/stacks/%s/services/%s/containers" $stack $service) }}
         {{- if (not (eq "stacks" $container)) }}
