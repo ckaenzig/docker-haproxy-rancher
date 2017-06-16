@@ -2,7 +2,7 @@ FROM haproxy:1.7
 
 ENV \
   CONFD_VERSION=0.12.0-alpha3 \
-  REFRESH_INTERVAL=10
+  REFRESH_INTERVAL=300
 
 RUN apt-get update \
   && apt-get install -y curl rsync \
