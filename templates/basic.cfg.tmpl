@@ -10,19 +10,17 @@ backend containers_autodiscovery
 
     server sorry 127.0.0.1:8082 backup
 
-{{- range $stack := ls "/stacks" }}
-  {{- range $service := ls (printf "/stacks/%s/services" $stack) }}
-    {{- if (eq "true" (printf "/stacks/%s/services/%s/labels/lb.enable" $stack $service)) }}
+{{- range $service := ls "/services" }}
+  {{- if (eq "true" (printf "/services/%s/labels/lb.enable" $service)) }}
 
-      {{- $interval := getv (printf "/stacks/%s/services/%s/health_check/interval" $stack $service) "2000" }}
-      {{- $unhealthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/unhealthy_threshold" $stack $service) "3" }}
-      {{- $healthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/healthy_threshold" $stack $service) "3" }}
-      {{- $port := getv (printf "/stacks/%s/services/%s/health_check/port" $stack $service) "80" }}
+    {{- $interval := getv (printf "/services/%s/health_check/interval" $service) "2000" }}
+    {{- $unhealthy_threshold := getv (printf "/services/%s/health_check/unhealthy_threshold" $service) "3" }}
+    {{- $healthy_threshold := getv (printf "/services/%s/health_check/healthy_threshold" $service) "3" }}
+    {{- $port := getv (printf "/services/%s/health_check/port" $service) "80" }}
 
-      {{- range $container := ls (printf "/stacks/%s/services/%s/containers" $stack $service) }}
-        {{- if (not (eq "stacks" $container)) }}
+    {{- range $container := ls (printf "/services/%s/containers" $service) }}
+      {{- if (not (eq "stacks" $container)) }}
     server {{ $container }} {{ $container }}.rancher.internal:{{ $port }} resolvers rancher inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none check
-        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
