@@ -46,10 +46,12 @@ frontend sorry_internal
     bind        127.0.0.1:8082
     use_backend sorry_page
 
-
 backend varnish
     server cache 127.0.0.1:6083 send-proxy inter 2000 rise 2 fall 3 check
     server sorry 127.0.0.1:8082 backup
+
+backend sorry_page
+    http-response set-status 500
 
 frontend apps_internal
     bind 127.0.0.1:8080
@@ -114,5 +116,3 @@ option httpchk GET "{{ $url }}" "HTTP/1.0\r\nHost:\ {{ $host }}"
   {{- end }}
 {{- end }}
 
-backend sorry_page
-    http-response set-status 500
