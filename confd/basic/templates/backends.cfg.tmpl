@@ -19,7 +19,7 @@ backend containers_autodiscovery
     {{- $port := getv (printf "/services/%s/health_check/port" $service) "80" }}
 
     {{- range $container := ls (printf "/services/%s/containers" $service) }}
-      {{- if (not (eq "stacks" $container)) }}
+      {{- if (not (eq "services" $container)) }}
     server {{ $container }} {{ $container }}.rancher.internal:{{ $port }} resolvers rancher inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none check
       {{- end }}
     {{- end }}
