@@ -1,6 +1,6 @@
 [template]
 src = "basic.cfg.tmpl"
-dest = "/haproxy.d/50-basic.cfg"
+dest = "/haproxy.d/50-backends.cfg"
 keys = [
   "/stacks",
 ]

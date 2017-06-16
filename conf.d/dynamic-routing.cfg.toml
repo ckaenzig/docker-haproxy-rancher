@@ -1,6 +1,6 @@
 [template]
 src = "dynamic-routing.cfg.tmpl"
-dest = "/haproxy.d/50-dynamic-routing.cfg"
+dest = "/haproxy.d/50-backends.cfg"
 keys = [
   "/stacks",
 ]
