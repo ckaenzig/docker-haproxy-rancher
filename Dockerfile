@@ -14,8 +14,6 @@ RUN curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/rel
 ADD haproxy-reload.sh /usr/local/sbin/
 
 COPY ./haproxy.d /haproxy.d
+COPY ./confd /etc/confd
 
-COPY ./conf.d /etc/confd/conf.d
-COPY ./templates /etc/confd/templates
-
-CMD /usr/local/bin/confd -interval $REFRESH_INTERVAL -config-file=/etc/confd/conf.d/$HAPROXY_CONFD_TMPL.cfg.toml -backend rancher -prefix /2016-07-29
+CMD /usr/local/bin/confd -interval $REFRESH_INTERVAL -confdir=/etc/confd/$HAPROXY_CONFD_TMPL/ -backend rancher -prefix /2016-07-29

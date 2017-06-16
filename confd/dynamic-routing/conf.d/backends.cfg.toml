@@ -1,8 +1,8 @@
 [template]
-src = "basic.cfg.tmpl"
+src = "backends.cfg.tmpl"
 dest = "/haproxy.d/50-backends.cfg"
 keys = [
-  "/services",
+  "/stacks",
 ]
 check_cmd = "haproxy -c -f /haproxy.d/"
 reload_cmd = "/usr/local/sbin/haproxy-reload.sh"
