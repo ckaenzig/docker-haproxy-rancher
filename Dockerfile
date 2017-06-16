@@ -11,7 +11,9 @@ RUN apt-get update \
 RUN curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 \
   && chmod +x /usr/local/bin/confd
 
+COPY ./haproxy.d /usr/local/etc/haproxy/haproxy.d
+
 COPY ./conf.d /etc/confd/conf.d
 COPY ./templates /etc/confd/templates
 
-CMD /usr/local/bin/confd -interval $REFRESH_INTERVAL -backend rancher -prefix /2016-07-29
+CMD /usr/local/bin/confd -interval $REFRESH_INTERVAL -config-file=/etc/confd/conf.d/$CONFD_CONFIG.cfg.toml -backend rancher -prefix /2016-07-29

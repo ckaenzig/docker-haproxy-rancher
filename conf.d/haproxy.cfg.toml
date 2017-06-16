@@ -1,8 +1,0 @@
-[template]
-src = "haproxy.cfg.tmpl"
-dest = "/usr/local/etc/haproxy/haproxy.cfg"
-keys = [
-  "/stacks",
-]
-check_cmd = "haproxy -c -f {{ .src }}"
-reload_cmd = "pkill -HUP -f haproxy-systemd-wrapper"

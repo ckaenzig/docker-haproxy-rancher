@@ -1,0 +1,8 @@
+[template]
+src = "dynamic-routing.cfg.tmpl"
+dest = "/usr/local/etc/haproxy/haproxy.d/50-dynamic-routing.cfg"
+keys = [
+  "/stacks",
+]
+check_cmd = "haproxy -c -f /usr/local/etc/haproxy/haproxy.d/"
+reload_cmd = "pkill -HUP -f haproxy-systemd-wrapper"

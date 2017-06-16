@@ -1,58 +1,3 @@
-global
-    log /dev/log local2 debug
-
-    # set default parameters to the intermediate configuration
-    # https://mozilla.github.io/server-side-tls/ssl-config-generator/?server=haproxy-1.7.2&openssl=1.0.1t&hsts=yes&profile=intermediate
-    # set default parameters to the intermediate configuration
-    tune.ssl.default-dh-param 2048
-    tune.ssl.cachesize 50000
-    ssl-default-bind-ciphers ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS
-    ssl-default-bind-options no-sslv3 no-tls-tickets
-    ssl-default-server-ciphers ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:ECDHE-ECDSA-DES-CBC3-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:DES-CBC3-SHA:!DSS
-    ssl-default-server-options no-sslv3 no-tls-tickets
-
-defaults
-    log global
-    mode http
-    option httplog
-    timeout connect 5s
-    timeout client  20s
-    timeout server  30s
-    timeout http-request 10s
-    timeout http-keep-alive 5s
-    timeout check   2s
-
-resolvers rancher
-    nameserver dnsmasq 169.254.169.250:53
-
-listen admin
-    bind *:8008
-    stats enable
-    stats uri /stats
-    monitor-uri /.external_healthcheck
-
-frontend 80
-    bind *:80
-    redirect scheme https code 301
-
-frontend 443
-    bind *:443 ssl crt /usr/local/etc/haproxy/certs/
-    reqadd X-Forwarded-Proto:\ https
-
-    use_backend varnish if { srv_is_up(varnish/cache) }
-    default_backend sorry_page
-
-frontend sorry_internal
-    bind        127.0.0.1:8082
-    use_backend sorry_page
-
-backend varnish
-    server cache 127.0.0.1:6083 send-proxy inter 2000 rise 2 fall 3 check
-    server sorry 127.0.0.1:8082 backup
-
-backend sorry_page
-    http-response set-status 500
-
 frontend apps_internal
     bind 127.0.0.1:8080
     monitor-uri /.internal_healthcheck
@@ -115,4 +60,3 @@ option httpchk GET "{{ $url }}" "HTTP/1.0\r\nHost:\ {{ $host }}"
     {{- end }}
   {{- end }}
 {{- end }}
-
