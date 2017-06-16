@@ -1,0 +1,29 @@
+frontend apps_internal
+    bind 127.0.0.1:8080
+    monitor-uri /.internal_healthcheck
+    use_backend containers_autodiscovery
+    default_backend sorry_page
+
+backend containers_autodiscovery
+    balance roundrobin
+    option redispatch
+
+    server sorry 127.0.0.1:8082 backup
+
+{{- range $stack := ls "/stacks" }}
+  {{- range $service := ls (printf "/stacks/%s/services" $stack) }}
+    {{- if (eq "true" (printf "/stacks/%s/services/%s/labels/lb.enable" $stack $service)) }}
+
+      {{- $interval := getv (printf "/stacks/%s/services/%s/health_check/interval" $stack $service) "2000" }}
+      {{- $unhealthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/unhealthy_threshold" $stack $service) "3" }}
+      {{- $healthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/healthy_threshold" $stack $service) "3" }}
+      {{- $port := getv (printf "/stacks/%s/services/%s/health_check/port" $stack $service) "80" }}
+
+      {{- range $container := ls (printf "/stacks/%s/services/%s/containers" $stack $service) }}
+        {{- if (not (eq "stacks" $container)) }}
+    server {{ $container }} {{ $container }}.rancher.internal:{{ $port }} resolvers rancher inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none check
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
