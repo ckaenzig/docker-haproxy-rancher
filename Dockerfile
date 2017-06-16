@@ -18,4 +18,4 @@ COPY ./haproxy.d /haproxy.d
 COPY ./conf.d /etc/confd/conf.d
 COPY ./templates /etc/confd/templates
 
-CMD /usr/local/bin/confd -interval $REFRESH_INTERVAL -config-file=/etc/confd/conf.d/$CONFD_CONFIG.cfg.toml -backend rancher -prefix /2016-07-29
+CMD /usr/local/bin/confd -interval $REFRESH_INTERVAL -config-file=/etc/confd/conf.d/$HAPROXY_CONFD_TMPL.cfg.toml -backend rancher -prefix /2016-07-29
