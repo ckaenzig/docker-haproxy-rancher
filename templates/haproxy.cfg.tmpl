@@ -25,10 +25,11 @@ defaults
 resolvers rancher
     nameserver dnsmasq 169.254.169.250:53
 
-listen stats
+listen admin
     bind *:8008
     stats enable
     stats uri /stats
+    monitor-uri /.external_healthcheck
 
 frontend 80
     bind *:80
@@ -52,6 +53,7 @@ backend varnish
 
 frontend apps_internal
     bind 127.0.0.1:8080
+    monitor-uri /.internal_healthcheck
     default_backend sorry_page
 {{- range $stack := ls "/stacks" }}
   {{- range $service := ls (printf "/stacks/%s/services" $stack) }}
