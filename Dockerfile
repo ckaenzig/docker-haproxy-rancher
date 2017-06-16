@@ -5,13 +5,15 @@ ENV \
   REFRESH_INTERVAL=10
 
 RUN apt-get update \
-  && apt-get install -y curl \
+  && apt-get install -y curl rsync \
   && rm -rf /var/apt/lists/*
 
 RUN curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 \
   && chmod +x /usr/local/bin/confd
 
-COPY ./haproxy.d /usr/local/etc/haproxy/haproxy.d
+ADD haproxy-reload.sh /usr/local/sbin/
+
+COPY ./haproxy.d /haproxy.d
 
 COPY ./conf.d /etc/confd/conf.d
 COPY ./templates /etc/confd/templates
