@@ -11,7 +11,7 @@ backend containers_autodiscovery
     server sorry 127.0.0.1:8082 backup
 
 {{- range $service := ls "/services" }}
-  {{- if (eq "true" (printf "/services/%s/labels/lb.enable" $service)) }}
+  {{- if (eq "true" (getv (printf "/services/%s/labels/lb.enable" $service) "false")) }}
 
     {{- $interval := getv (printf "/services/%s/health_check/interval" $service) "2000" }}
     {{- $unhealthy_threshold := getv (printf "/services/%s/health_check/unhealthy_threshold" $service) "3" }}
