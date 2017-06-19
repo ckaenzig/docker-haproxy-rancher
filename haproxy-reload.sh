@@ -1,9 +1,6 @@
 #!/bin/sh -e
 
-SOURCE="/haproxy.d/"
-DEST="/usr/local/etc/haproxy/haproxy.d/"
-
-rsync -av --delete "$SOURCE" "$DEST"
+rsync -av --delete /haproxy.d/*.cfg /usr/local/etc/haproxy/haproxy.d/
 
 PID="$(pidof haproxy-systemd-wrapper)"
 if [ -z "$PID" ]; then
