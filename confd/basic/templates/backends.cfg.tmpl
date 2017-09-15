@@ -1,6 +1,8 @@
 frontend apps_internal
     bind 127.0.0.1:8080
     monitor-uri /.internal_healthcheck
+    capture request header X-Request-ID len 42 # nb: len of a typical X-Amzn-Trace-Id
+
     use_backend containers_autodiscovery
     default_backend sorry_page
 
