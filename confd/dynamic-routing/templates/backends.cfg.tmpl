@@ -72,7 +72,7 @@ option httpchk GET "{{ $url }}" "HTTP/1.0\r\nHost:\ {{ $host }}"
     {{- if eq "letsencrypt" $service }}
 
 backend LE_acme_challenge_{{ $stack }}
-    default-server inter 5000 rise 1 fall 3 init-addr none
+    default-server inter 1000 rise 1 fall 3 init-addr none
     server {{ $stack }}-{{ $service }}-1 {{ $stack }}-{{ $service }}-1.rancher.internal:80 resolvers rancher check
     {{- end }}
   {{- end }}
