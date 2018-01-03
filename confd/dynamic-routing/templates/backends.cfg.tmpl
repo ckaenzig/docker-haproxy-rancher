@@ -38,7 +38,7 @@ backend {{ $stack }}_{{ $service }}
 
       {{- $interval := getv (printf "/stacks/%s/services/%s/health_check/interval" $stack $service) "2000" }}
       {{- $unhealthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/unhealthy_threshold" $stack $service) "3" }}
-      {{- $healthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/healthy_threshold" $stack $service) "3" }}
+      {{- $healthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/healthy_threshold" $stack $service) "2" }}
       {{- $port := getv (printf "/stacks/%s/services/%s/health_check/port" $stack $service) "80" }}
 
     default-server inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none

@@ -17,7 +17,7 @@ backend containers_autodiscovery
 
     {{- $interval := getv (printf "/services/%s/health_check/interval" $service) "2000" }}
     {{- $unhealthy_threshold := getv (printf "/services/%s/health_check/unhealthy_threshold" $service) "3" }}
-    {{- $healthy_threshold := getv (printf "/services/%s/health_check/healthy_threshold" $service) "3" }}
+    {{- $healthy_threshold := getv (printf "/services/%s/health_check/healthy_threshold" $service) "2" }}
     {{- $port := getv (printf "/services/%s/health_check/port" $service) "80" }}
 
     {{- range $container := ls (printf "/services/%s/containers" $service) }}
