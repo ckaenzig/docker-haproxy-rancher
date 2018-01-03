@@ -1,7 +1,7 @@
-FROM haproxy:1.7
+FROM haproxy:1.8
 
 ENV \
-  CONFD_VERSION=0.12.0-alpha3 \
+  CONFD_VERSION=0.14.0 \
   REFRESH_INTERVAL=300
 
 RUN apt-get update \
