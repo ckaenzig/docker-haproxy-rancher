@@ -45,11 +45,7 @@ backend {{ $stack }}_{{ $service }}
     server sorry 127.0.0.1:8082 backup
 
       {{- if eq "service" (getv (printf "/stacks/%s/services/%s/kind" $stack $service)) }}
-        {{- range $container := ls (printf "/stacks/%s/services/%s/containers" $stack $service) }}
-          {{- if (not (eq "stacks" $container)) }}
-    server {{ $container }} {{ $container }}.rancher.internal:{{ $port }} resolvers rancher check
-          {{- end }}
-        {{- end }}
+    server-template {{ $stack }} {{ len (lsdir (printf "/stacks/%s/services/%s/containers/" $stack $service)) }} {{ $service }}.{{ $stack }}.rancher.internal:{{ $port }} resolvers rancher check
       {{- end }}
       {{- if eq "externalService" (getv (printf "/stacks/%s/services/%s/kind" $stack $service)) }}
     server {{ $stack }}-{{ $service }} {{ getv (printf "/stacks/%s/services/%s/hostname" $stack $service) }}:{{ $port }} resolvers rancher check
