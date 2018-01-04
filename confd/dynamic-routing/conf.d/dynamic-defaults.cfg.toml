@@ -1,0 +1,8 @@
+[template]
+src = "dynamic-defaults.cfg.tmpl"
+dest = "/haproxy.d/03-dynamic-defaults.cfg"
+keys = [
+  "/self",
+]
+check_cmd = "haproxy -c -f /haproxy.d/"
+reload_cmd = "/usr/local/sbin/haproxy-reload.sh"

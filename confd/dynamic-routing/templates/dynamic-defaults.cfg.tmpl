@@ -1,0 +1,5 @@
+global
+  nbproc 1
+  nbthread {{ replace (getv "/self/host/milli_cpu") "000" "" 1 }}
+  cpu-map auto:1/all 0-
+
