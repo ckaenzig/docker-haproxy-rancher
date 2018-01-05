@@ -6,7 +6,7 @@ ENV \
 
 RUN apt-get update \
   && apt-get -y upgrade \
-  && apt-get install -y curl rsync \
+  && apt-get install -y curl rsync procps \
   && apt-get clean \
   && rm -rf /var/apt/lists/*
 
