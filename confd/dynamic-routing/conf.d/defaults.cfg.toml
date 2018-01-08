@@ -1,6 +1,6 @@
 [template]
-src = "dynamic-defaults.cfg.tmpl"
-dest = "/haproxy.d/03-dynamic-defaults.cfg"
+src = "defaults.cfg.tmpl"
+dest = "/haproxy.d/01-defaults.cfg"
 keys = [
   "/self",
 ]
