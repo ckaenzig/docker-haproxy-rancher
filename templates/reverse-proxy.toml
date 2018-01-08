@@ -7,4 +7,4 @@ keys = [
   "/self",
 ]
 check_cmd = "haproxy -c -f {{ .src }}"
-reload_cmd = "pkill -HUP -o -e -f '^haproxy\\s.*-f\\s+/usr/local/etc/haproxy/reverse-proxy.cfg'"
+reload_cmd = "pkill -USR2 -o -e -f '^haproxy\\s.*-f\\s+/usr/local/etc/haproxy/reverse-proxy.cfg'"
