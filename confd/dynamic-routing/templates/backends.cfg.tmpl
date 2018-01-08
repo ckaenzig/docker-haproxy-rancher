@@ -36,6 +36,10 @@ backend {{ $stack }}_{{ $service }}
       {{- end }}
     timeout check {{ getv (printf "/stacks/%s/services/%s/health_check/response_timeout" $stack $service) "2000" }}
 
+      {{- range getvs (printf "/stacks/%s/services/%s/labels/lb.haproxy_backend.*" $stack $service) }}
+    {{.}}
+      {{- end }}
+
       {{- $interval := getv (printf "/stacks/%s/services/%s/health_check/interval" $stack $service) "2000" }}
       {{- $unhealthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/unhealthy_threshold" $stack $service) "3" }}
       {{- $healthy_threshold := getv (printf "/stacks/%s/services/%s/health_check/healthy_threshold" $stack $service) "2" }}

@@ -8,3 +8,7 @@ defaults
     timeout http-request 10s
     timeout http-keep-alive 5s
     timeout check   2s
+
+{{- range getvs "/self/host/labels/lb.haproxy_defaults.*" }}
+    {{.}}
+{{- end }}
