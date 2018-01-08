@@ -1,7 +1,0 @@
-[template]
-src = "globals.cfg.tmpl"
-dest = "/haproxy.d/00-globals.cfg"
-keys = [
-  "/self",
-]
-reload_cmd = "/usr/local/sbin/haproxy-reload.sh"

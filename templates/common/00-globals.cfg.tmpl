@@ -1,3 +1,5 @@
+# common/00-globals.cfg.tmpl
+
 global
     log /logging_agent/dev/log local2 debug
     stats socket /run/haproxy/admin.sock mode 660 level admin
@@ -21,3 +23,4 @@ global
 {{- range getvs "/self/host/labels/lb.haproxy_global.*" }}
     {{.}}
 {{- end }}
+

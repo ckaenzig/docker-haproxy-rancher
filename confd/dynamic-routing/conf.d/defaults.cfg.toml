@@ -1,7 +1,0 @@
-[template]
-src = "defaults.cfg.tmpl"
-dest = "/haproxy.d/01-defaults.cfg"
-keys = [
-  "/self",
-]
-reload_cmd = "/usr/local/sbin/haproxy-reload.sh"
