@@ -4,5 +4,4 @@ dest = "/haproxy.d/01-defaults.cfg"
 keys = [
   "/self",
 ]
-check_cmd = "haproxy -c -f /haproxy.d/"
 reload_cmd = "/usr/local/sbin/haproxy-reload.sh"
