@@ -3,7 +3,7 @@ global
     stats socket /run/haproxy/admin.sock mode 660 level admin
 
     # set default parameters to the intermediate configuration
-    # https://mozilla.github.io/server-side-tls/ssl-config-generator/?server=haproxy-1.7.2&openssl=1.0.1t&hsts=yes&profile=intermediate
+    # https://mozilla.github.io/server-side-tls/ssl-config-generator/?server=haproxy-1.8.3&openssl=1.1.0f&hsts=no&profile=intermediate
     # set default parameters to the intermediate configuration
     tune.ssl.default-dh-param 2048
     tune.ssl.cachesize 50000
