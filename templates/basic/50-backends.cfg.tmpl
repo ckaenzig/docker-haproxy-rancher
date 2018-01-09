@@ -24,7 +24,7 @@ backend containers_autodiscovery
 
     {{- range $container := ls (printf "/services/%s/containers" $service) }}
       {{- if (not (eq "services" $container)) }}
-    server {{ $container }} {{ $container }}.rancher.internal:{{ $port }} resolvers rancher resolve-prefer ipv4 inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none check
+    server {{ $container }} {{ $container }}.rancher.internal:{{ $port }} check resolvers rancher resolve-prefer ipv4 inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none
       {{- end }}
     {{- end }}
   {{- end }}
