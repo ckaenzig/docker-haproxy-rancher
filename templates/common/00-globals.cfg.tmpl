@@ -1,6 +1,10 @@
 # common/00-globals.cfg.tmpl
 
 global
+
+    # capped because of systemd's nofile=1048576
+    maxconn 262113
+
     log /logging_agent/dev/log local2 debug
     stats socket /run/haproxy/admin.sock mode 660 level admin
 
