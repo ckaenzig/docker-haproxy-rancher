@@ -1,8 +1,9 @@
 FROM haproxy:1.8
 
-ENV \
-  CONFD_VERSION=0.14.0 \
-  REFRESH_INTERVAL=300
+ARG CONFD_VERSION=0.16.0
+ARG CONFD_SHA256=255d2559f3824dd64df059bdc533fd6b697c070db603c76aaf8d1d5e6b0cc334
+
+ENV REFRESH_INTERVAL=300
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -12,6 +13,7 @@ RUN apt-get update \
 
 RUN curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 \
   && chmod +x /usr/local/bin/confd
+RUN echo "${CONFD_SHA256}  /usr/local/bin/confd" | sha256sum -c -
 
 RUN mkdir -p /etc/confd/basic/conf.d /etc/confd/basic/templates/
 RUN mkdir -p /etc/confd/dynamic-routing/conf.d /etc/confd/dynamic-routing/templates/
