@@ -6,6 +6,7 @@ global
     maxconn 262110
 
     log /logging_agent/dev/log local2 debug
+    log 10.42.24.201:514       local2 debug
     stats socket /run/haproxy/admin.sock mode 660 level admin
 
     # set default parameters to the intermediate configuration
