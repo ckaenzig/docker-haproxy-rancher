@@ -32,6 +32,10 @@ backend containers_autodiscovery
     {{- if eq "externalService" (getv (printf "/services/%s/kind" $service)) }}
       {{- if (ne "null" (getv (printf "/services/%s/hostname" $service) "null")) }}
     server {{ $service }} {{ getv (printf "/services/%s/hostname" $service) }}:{{ $port }} check resolvers rancher resolve-prefer ipv4 inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none
+      {{- else }}
+        {{- range $ip := ls (printf "/services/%s/external_ips/" $service) }}
+    server {{ $service }}-{{ $ip }} {{ getv (printf "/services/%s/external_ips/%s" $service $ip) }}:{{ $port }} check inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }}
+        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
