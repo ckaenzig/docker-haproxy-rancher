@@ -17,6 +17,10 @@ backend containers_autodiscovery
 {{- range $service := ls "/services" }}
   {{- if (and (eq "true" (getv (printf "/services/%s/labels/lb.enable" $service) "false")) (eq "active" (getv (printf "/services/%s/state" $service)))) }}
 
+      {{- range getvs (printf "/services/%s/labels/lb.haproxy_backend.*" $service) }}
+    {{.}}
+      {{- end }}
+
     {{- $interval := getv (printf "/services/%s/health_check/interval" $service) "2000" }}
     {{- $unhealthy_threshold := getv (printf "/services/%s/health_check/unhealthy_threshold" $service) "3" }}
     {{- $healthy_threshold := getv (printf "/services/%s/health_check/healthy_threshold" $service) "2" }}
