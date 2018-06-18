@@ -25,16 +25,16 @@ backend containers_autodiscovery
     {{- if eq "service" (getv (printf "/services/%s/kind" $service)) }}
       {{- range $container := ls (printf "/services/%s/containers" $service) }}
         {{- if (not (eq "services" $container)) }}
-    server {{ $container }} {{ $container }}.rancher.internal:{{ $port }} check resolvers rancher resolve-prefer ipv4 inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none
+    server {{ $container }} {{ $container }}.rancher.internal:{{ $port }} check resolvers rancher resolve-prefer ipv4 inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} init-addr none
         {{- end }}
       {{- end }}
     {{- end }}
     {{- if eq "externalService" (getv (printf "/services/%s/kind" $service)) }}
       {{- if (ne "null" (getv (printf "/services/%s/hostname" $service) "null")) }}
-    server {{ $service }} {{ getv (printf "/services/%s/hostname" $service) }}:{{ $port }} check resolvers rancher resolve-prefer ipv4 inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }} init-addr none
+    server {{ $service }} {{ getv (printf "/services/%s/hostname" $service) }}:{{ $port }} check resolvers rancher resolve-prefer ipv4 inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} init-addr none
       {{- else }}
         {{- range $ip := ls (printf "/services/%s/external_ips/" $service) }}
-    server {{ $service }}-{{ $ip }} {{ getv (printf "/services/%s/external_ips/%s" $service $ip) }}:{{ $port }} check inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }} port {{ $port }}
+    server {{ $service }}-{{ $ip }} {{ getv (printf "/services/%s/external_ips/%s" $service $ip) }}:{{ $port }} check inter {{ $interval }} rise {{ $healthy_threshold }} fall {{ $unhealthy_threshold }}
         {{- end }}
       {{- end }}
     {{- end }}
