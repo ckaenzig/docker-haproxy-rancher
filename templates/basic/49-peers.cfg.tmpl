@@ -1,0 +1,9 @@
+# basic/49-peers.cfg.tmpl
+
+peers haproxies
+{{- range $peer := ls "/self/stack/services/haproxy/containers" }}
+  {{- $container := getv (printf "/services/haproxy/containers/%s/external_id" $peer) }}
+  {{- $ip := getv (printf "/services/haproxy/containers/%s/ips/0" $peer) }}
+  peer {{ printf "%.12s" $container }} {{ $ip }}:1024
+{{- end }}
+
