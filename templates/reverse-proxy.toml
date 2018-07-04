@@ -6,5 +6,5 @@ keys = [
   "/stacks",
   "/self",
 ]
-check_cmd = "haproxy -c -f {{ .src }}"
+check_cmd = "haproxy -c -f {{ .src }} -L haproxy-rancher-confd-check"
 reload_cmd = "pkill -USR2 -o -e -f '^haproxy\\s.*-f\\s+/usr/local/etc/haproxy/reverse-proxy.cfg'"
